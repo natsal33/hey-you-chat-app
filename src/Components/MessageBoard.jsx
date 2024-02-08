@@ -1,13 +1,26 @@
-import React from "react";
+import { React, useState, useEffect } from "react";
 import Message from "./Message";
+import "./MessageBoard.css";
 
-function MessageBoard() {
+function MessageBoard(props) {
+  const [messageObjects, updateMessageObjects] = useState();
+  console.log(props.messages);
+
+  useEffect(() => {
+    updateMessages();
+  }, []);
+
+  async function updateMessages() {
+    const newMessageObjects = props.messages.map((message) => (
+      <Message name={message.name} message={message.message} />
+    ));
+    updateMessageObjects(newMessageObjects);
+  }
+
   return (
-    <div>
-      <Message />
-      <Message />
-      <Message />
-      <Message />
+    <div id="messageBoard">
+      <h2>Message Board</h2>
+      {messageObjects}
     </div>
   );
 }

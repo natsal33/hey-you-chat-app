@@ -1,12 +1,23 @@
-import React from "react";
+import { React, useState } from "react";
 
-function InputBox() {
-  function sendMessage(e) {}
+function InputBox({ send }) {
+  const [message, updateMessage] = useState("");
+
+  async function handleSubmit(e) {
+    send({
+      name: "me",
+      message: message,
+    });
+    e.preventDefault();
+  }
 
   return (
     <div>
-      <form onSubmit={sendMessage}>
-        <input type="text"></input>
+      <form onSubmit={handleSubmit}>
+        <input
+          type="text"
+          onChange={(e) => updateMessage(e.target.value)}
+        ></input>
         <input type="submit" value="Send" />
       </form>
     </div>

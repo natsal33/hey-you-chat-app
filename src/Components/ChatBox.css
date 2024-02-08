@@ -1,0 +1,13 @@
+#chatbox {
+  padding: 10px;
+  border: 2px solid blue;
+  width: 80%;
+  display: flex;
+  justify-items: center;
+}
+
+#messageInputBox {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
