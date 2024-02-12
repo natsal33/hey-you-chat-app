@@ -1,70 +1,101 @@
-# Getting Started with Create React App
+# Hey You! - a place to chat (IN PROGRESS)
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Features
 
-## Available Scripts
+- Real-time messaging: Users can send and receive messages in real-time.
+- User authentication: Users can register, login, and authenticate themselves to access the chat features.
+- Secure storage: User and message data is securely stored in a PostgreSQL database.
+- Lightweight API: The API built with Flask provides efficient communication between the front-end and the database.
 
-In the project directory, you can run:
+UPDATE 2/11/24:
+Hey You! has a functioning front-end message board and user list ready for message+user data. Next steps will be to create dummy message+user data in PostgreSQL, and develop an API in Flask to manage read and write requests.
 
-### `npm start`
+## Setup Instructions
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+### Frontend Setup
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+1. Clone this repository:
 
-### `npm test`
+   ```
+   git clone https://github.com/natsal33/hey-you-chat-app
+   ```
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+2. Install dependencies:
 
-### `npm run build`
+   ```
+   npm install
+   ```
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+3. Start the development server:
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+   ```
+   npm start
+   ```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+<!-- ### Backend Setup
 
-### `npm run eject`
+1. Navigate to the `./app` directory:
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+    ```
+    cd app
+    ```
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+2. Create a virtual environment:
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+    ```
+    python3 -m venv venv
+    ```
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+3. Activate the virtual environment:
 
-## Learn More
+    - On macOS and Linux:
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+        ```
+        source venv/bin/activate
+        ```
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+    - On Windows:
 
-### Code Splitting
+        ```
+        venv\Scripts\activate
+        ```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
 
-### Analyzing the Bundle Size
+4. Set up the PostgreSQL database:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+    - Install PostgreSQL if you haven't already: [PostgreSQL Downloads](https://www.postgresql.org/download/)
+    - Create a new database and note down the credentials.
 
-### Making a Progressive Web App
+5. Configure the Flask application:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+    - Rename `.env.example` to `.env`.
+    - Update the `DATABASE_URL` variable in `.env` with your PostgreSQL database URL.
 
-### Advanced Configuration
+6. Run the Flask application:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+    ```
+    flask run
+    ``` -->
 
-### Deployment
+## Tech Stack
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+- Frontend:
 
-### `npm run build` fails to minify
+  - React
+  - JavaScript
+  - HTML/CSS
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+- Backend:
+
+  - Flask (Python)
+
+- Database:
+  - PostgreSQL
+
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+
+## Contact
+
+If you have any questions or suggestions, feel free to contact us at example@email.com. We'd love to hear from you!
