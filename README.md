@@ -98,4 +98,4 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 
 ## Contact
 
-If you have any questions or suggestions, feel free to contact us at example@email.com. We'd love to hear from you!
+If you have any questions or suggestions, feel free to contact me at natmsal33@gmail.com. I'd love to hear from you!
