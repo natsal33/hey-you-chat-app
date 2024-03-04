@@ -2,7 +2,6 @@ import { React, useState } from "react";
 import InputBox from "./InputBox";
 import UsersBox from "./UsersBox";
 import MessageBoard from "./MessageBoard";
-import "./ChatUI.css";
 import "./ChatBox.css";
 
 function ChatBox() {
@@ -23,15 +22,9 @@ function ChatBox() {
     oldMessages.push({ name: inMessage.name, message: inMessage.message });
   };
   return (
-<<<<<<< HEAD
     <div className="chat-box">
       <UsersBox />
       <div className="message-input-box">
-=======
-    <div className="chat">
-      <UsersBox />
-      <div>
->>>>>>> main
         <MessageBoard messages={messages} />
         <InputBox send={takeInputMessage} />
       </div>
