@@ -1,4 +1,5 @@
 import { React, useState } from "react";
+import "./InputBox.css";
 
 function InputBox({ send }) {
   const [message, updateMessage] = useState("");
@@ -12,7 +13,7 @@ function InputBox({ send }) {
   }
 
   return (
-    <div>
+    <div className="message-input-box">
       <form onSubmit={handleSubmit}>
         <input
           type="text"

@@ -12,7 +12,7 @@ def index():
     return "Hello, World!"
 
 # Retrieve user data from database, throw error if user is not found.
-@app.route('/user')
+@app.route('/api/user')
 def getUser():
     # If arguments are passed into the URL, proceed to retrieve from database.
     if request.args:
@@ -30,7 +30,7 @@ def getUser():
     return userfetched
 
 # Retrieve all users logged in the database
-@app.route('/getAllUsers')
+@app.route('/api/get-all-users')
 def getUsers():
     conn = psycopg2.connect(conn_string)
     cursor = conn.cursor()
@@ -43,7 +43,7 @@ def getUsers():
 # Adds User to "user" and "messages" database with attributes username, location, and fav_color. Assigns location 
 # as "unknown" and fav_color as "green" if not assigned by the argument input. Throws exception if user attempts to
 # create a duplicate username.
-@app.route('/create-user')
+@app.route('/api/create-user')
 def createUser():
 
     if request.args:
@@ -72,7 +72,7 @@ def createUser():
     else:
         return "User was not created."
  
-@app.route('/get-messages')
+@app.route('/api/get-messages')
 def getMessages():
     if request.args:
         username = request.args.get("username", None)
@@ -100,7 +100,7 @@ def getMessages():
         except:
             return "Could not retrieve messages. Please try again."
 
-@app.route('/send-message')
+@app.route('/api/send-message')
 def sendMessage():
     if request.args:
         username = request.args.get("username", None)

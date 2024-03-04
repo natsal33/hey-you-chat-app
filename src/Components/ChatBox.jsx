@@ -22,9 +22,9 @@ function ChatBox() {
     oldMessages.push({ name: inMessage.name, message: inMessage.message });
   };
   return (
-    <div id="chatbox">
+    <div className="chat-box">
       <UsersBox />
-      <div id="messageInputBox">
+      <div className="message-input-box">
         <MessageBoard messages={messages} />
         <InputBox send={takeInputMessage} />
       </div>

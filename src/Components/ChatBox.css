@@ -1,4 +1,4 @@
-#chatbox {
+.chat-box {
   padding: 10px;
   border: 2px solid blue;
   width: 80%;
@@ -6,7 +6,7 @@
   justify-items: center;
 }
 
-#messageInputBox {
+.message-input-box {
   display: flex;
   flex-direction: column;
   width: 100%;

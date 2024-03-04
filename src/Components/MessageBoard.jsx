@@ -18,7 +18,7 @@ function MessageBoard(props) {
   }
 
   return (
-    <div id="messageBoard">
+    <div className="message-board">
       <h2>Message Board</h2>
       {messageObjects}
     </div>
