@@ -1,7 +1,9 @@
 from flask import Flask, request
 import psycopg2
+from flask_cors import CORS
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder="../build", static_url_path="/")
+CORS(app)
 
 conn_string = "host='localhost' dbname='nataliesalazar'"
 
@@ -9,7 +11,7 @@ conn_string = "host='localhost' dbname='nataliesalazar'"
 @app.route('/')
 @app.route('/index')
 def index():
-    return "Hello, World!"
+    return app.send_static_file("index.html")
 
 # Retrieve user data from database, throw error if user is not found.
 @app.route('/user')

@@ -1,5 +1,6 @@
 import { React, useState, useEffect } from "react";
 import Message from "./Message";
+import "./ChatUI.css";
 import "./MessageBoard.css";
 
 function MessageBoard(props) {
@@ -18,9 +19,8 @@ function MessageBoard(props) {
   }
 
   return (
-    <div id="messageBoard">
-      <h2>Message Board</h2>
-      {messageObjects}
+    <div clasName="messages">
+      <div className="messages-content">{messageObjects}</div>
     </div>
   );
 }

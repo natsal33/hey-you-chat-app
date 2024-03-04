@@ -1,4 +1,5 @@
 import { React, useState } from "react";
+import "./ChatUI.css";
 
 function InputBox({ send }) {
   const [message, updateMessage] = useState("");
@@ -12,14 +13,16 @@ function InputBox({ send }) {
   }
 
   return (
-    <div>
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          onChange={(e) => updateMessage(e.target.value)}
-        ></input>
-        <input type="submit" value="Send" />
-      </form>
+    <div className="message-box">
+      <textarea
+        type="text"
+        className="message-input"
+        placeholder="Type message..."
+        onChange={(e) => updateMessage(e.target.value)}
+      ></textarea>
+      <button type="submit" className="message-submit" value="Send">
+        Send
+      </button>
     </div>
   );
 }
