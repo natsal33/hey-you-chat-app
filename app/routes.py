@@ -1,12 +1,24 @@
-from flask import Flask, request
+import os
+from functools import wraps
+from flask import redirect, request, abort, session, url_for
+from flask import current_app, Flask
 import psycopg2
+from jwt import decode, encode
 from flask_cors import CORS
+from werkzeug.security import check_password_hash, generate_password_hash
+
+
 
 app = Flask(__name__, static_folder="../build", static_url_path="/")
 CORS(app)
+SECRET_KEY = os.environ.get('SECRET_KEY') or 'gimme all you got'
+app.config['SECRET_KEY'] = SECRET_KEY
 
 conn_string = "host='localhost' dbname='nataliesalazar'"
 
+
+
+#region
 # print ("Connecting to database\n	->%s" % (conn_string))
 
 # conn = psycopg2.connect(conn_string)
@@ -14,8 +26,11 @@ conn_string = "host='localhost' dbname='nataliesalazar'"
 # cursor = conn.cursor()
 
 # cursor.execute("""
-#     INSERT INTO users (id, name) VALUES
-#     (default,'Ben');
+#     INSERT INTO username_passwords (username, password) VALUES 
+#         ('Natalie!', 'Bitches!'),
+#         ('Ben', 'iloveseahawks'),
+#         ('Sammy', 'wheresdaburgers'),
+#         ('Monica', 'Kameron4ever')
 # """) 
 
 # conn.commit()
@@ -31,11 +46,51 @@ conn_string = "host='localhost' dbname='nataliesalazar'"
 	# for most people this isn't very useful so we'll show you how to return
 	# columns as a dictionary (hash) in the next example.
 	# print(records)
+#endregion
 
 @app.route('/')
 @app.route('/index')
 def index():
     return app.send_static_file("index.html")
+
+
+@app.route('/api/log-in', methods=["POST"])
+def login():
+    print("made it into login route")
+    print("GET JSON: ", request.get_json())
+    if request.get_json():
+        req = request.get_json()
+        username = req['username']
+        password = req['password']
+
+        print("User submitted: ", username, password)
+        params = {'username': username}
+        try: 
+            conn = psycopg2.connect(conn_string)
+            cursor = conn.cursor()
+            cursor.execute("SELECT * FROM username_passwords WHERE username=%(username)s", params)
+            user = cursor.fetchone()
+            conn.close()
+            print("user:", user)
+            print(user[2])
+            if user is None:
+                return("user is none")
+            elif not user[2] == password:
+                return("incorrect password")
+            else:
+                print("made it to else statement")
+                session.clear()
+                session['user_id'] = user[0]
+                return redirect("/chat")
+        except Exception as e:
+            return str("An unknown error occurred." + str(e))
+    else:
+        return "No arguments passed";
+
+@app.route('/api/log-out')
+def logout():
+    session.clear()
+    return redirect("/login")
 
 # Retrieve user data from database, throw error if user is not found.
 @app.route('/api/user')

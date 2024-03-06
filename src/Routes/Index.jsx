@@ -12,7 +12,7 @@ import Logout from "./Logout.jsx";
 import Chat from "./Chat.jsx";
 
 const Routes = () => {
-  const { token } = useAuth();
+  const { token } = "";
 
   const routesForPublic = [
     {

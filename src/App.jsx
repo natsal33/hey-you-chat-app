@@ -3,11 +3,7 @@ import AuthProvider from "./Provider/AuthProvider.js";
 import Routes from "./Routes/Index";
 
 function App() {
-  return (
-    <AuthProvider>
-      <Routes />
-    </AuthProvider>
-  );
+  return <Routes />;
 }
 
 export default App;
