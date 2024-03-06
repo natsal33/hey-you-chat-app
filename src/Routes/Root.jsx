@@ -1,9 +1,10 @@
 import React from "react";
 import { Outlet } from "react-router-dom";
+import "./Root.css";
 
 function Root() {
   return (
-    <div className="App">
+    <div className="Root">
       <h1>Hey, You!</h1>
       <Outlet />
     </div>
