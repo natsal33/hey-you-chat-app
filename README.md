@@ -2,13 +2,16 @@
 
 ## Features
 
-- Real-time messaging: Users can send and receive messages in real-time.
-- User authentication: Users can register, login, and authenticate themselves to access the chat features.
-- Secure storage: User and message data is securely stored in a PostgreSQL database.
-- Lightweight API: The API built with Flask provides efficient communication between the front-end and the database.
+- (IP) Real-time messaging: Users can send and receive messages in real-time.
+- (IP ) User authentication using JSON Web Tokens: Users can register, login, and authenticate themselves to access the chat features.
+- Secure storage via PostgresSQL: User and message data is securely stored in a PostgreSQL database.
+- (IP) Lightweight API: The API built with Flask provides efficient communication between the front-end and the database.
 
-UPDATE 2/11/24:
-Hey You! has a functioning front-end message board and user list ready for message+user data. Next steps will be to create dummy message+user data in PostgreSQL, and develop an API in Flask to manage read and write requests.
+UPDATE 3/8/24:
+Hey You! has an established backend using psycopg2 with tables that store user profile data, usernam+password credentials, and messages posted to the chat with username and time stamps.
+Created branch "jwt_imp" to implement JWT authenticaion without harming the main branch. Progress so far:
+   - Created authentication helper methods in /src/Provider/AuthHelperMethods.js to make creating, checking, and deleting JSON web tokens through login and logout site routing.
+   - Created authentication React component wrapper <Protected Route/> in /src/Routes/ProtectedRoute.jsx to provide a simple way to protect react router components (such as the chat page) from unauthenticated users.
 
 ## Setup Instructions
 
