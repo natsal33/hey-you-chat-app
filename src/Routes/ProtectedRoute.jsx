@@ -3,7 +3,7 @@ import { Navigate, Outlet } from "react-router-dom";
 import { useAuth } from "../Provider/AuthProvider";
 import AuthHelperMethods from "../Provider/AuthHelperMethods";
 
-export const ProtectedRoute = (AuthComponent) => {
+export const ProtectedRoute = (props) => {
   console.log("made it to protected route comp");
   // const Auth = new AuthHelperMethods();
 
@@ -40,7 +40,7 @@ export const ProtectedRoute = (AuthComponent) => {
   // } else {
   //   return null;
   // }
-  return <div>{AuthComponent}</div>;
+  return <div>{props.component}</div>;
 };
 
 // const { token } = useAuth();

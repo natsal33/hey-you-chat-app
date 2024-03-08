@@ -13,11 +13,11 @@ const Login = () => {
   const [password, setPassword] = useState("");
 
   const handleFormSubmit = (e) => {
-    console.log("made it into handle form submit");
+    console.log("STEP 1: made it into handle form submit");
     e.preventDefault();
     const form = e.target;
     const formData = new FormData(form);
-    console.log("Form Data: ", Object.fromEntries(formData.entries()));
+    console.log("STEP 2: Form Data: ", Object.fromEntries(formData.entries()));
 
     /* Here is where all the login logic will go. Upon clicking the login button, we would like to utilize a login method that will send our entered credentials over to the server for verification. Once verified, it should store your token and send you to the protected route. */
     Auth.login(formData)
@@ -25,7 +25,7 @@ const Login = () => {
         if (res === false) {
           return alert("Sorry, those credentials don't exist!");
         }
-        navigate("/", { replace: true });
+        navigate("/chat", { replace: true });
       })
       .catch((err) => {
         alert(err);

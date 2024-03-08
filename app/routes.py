@@ -1,3 +1,4 @@
+import datetime
 import os
 from functools import wraps
 from flask import redirect, request, abort, session, url_for
@@ -56,14 +57,15 @@ def index():
 
 @app.route('/api/log-in', methods=["POST"])
 def login():
-    print("made it into login route")
-    print("GET JSON: ", request.get_json())
+    print("STEP 5: made it into login route")
+    print("STEP 5.2: GET JSON: ", request.get_json())
+    print("Request header: ", request.headers)
     if request.get_json():
         req = request.get_json()
         username = req['username']
         password = req['password']
 
-        print("User submitted: ", username, password)
+        print("STEP 6: User submitted: ", username, password)
         params = {'username': username}
         try: 
             conn = psycopg2.connect(conn_string)
@@ -71,17 +73,20 @@ def login():
             cursor.execute("SELECT * FROM username_passwords WHERE username=%(username)s", params)
             user = cursor.fetchone()
             conn.close()
-            print("user:", user)
-            print(user[2])
+            print("STEP 7: user:", user)
             if user is None:
                 return("user is none")
             elif not user[2] == password:
                 return("incorrect password")
             else:
-                print("made it to else statement")
-                session.clear()
-                session['user_id'] = user[0]
-                return redirect("/chat")
+                print("STEP 8: made it to else statement")
+                token = encode({"username": username, "exp": datetime.now()+129600}, SECRET_KEY, algorithm="HS256")
+                res.jsonify({
+                    "success": True,
+                    "err": None,
+                    "token": token
+                })
+                return token
         except Exception as e:
             return str("An unknown error occurred." + str(e))
     else:
@@ -118,7 +123,8 @@ def getUsers():
     cursor.execute("SELECT * FROM users")
     users = cursor.fetchall()
     conn.close()
-
+    print("type: ", type(users))
+    print(users)
     return users
 
 # Adds User to "user" and "messages" database with attributes username, location, and fav_color. Assigns location 

@@ -23,18 +23,12 @@ const Routes = () => {
 
   const routesForAuthenticatedOnly = [
     {
-      path: "/",
-      element: <ProtectedRoute />,
-      children: [
-        {
-          path: "/chat",
-          element: <Chat />,
-        },
-        {
-          path: "/logout",
-          element: <Logout />,
-        },
-      ],
+      path: "/chat",
+      element: <ProtectedRoute component={<Chat />} />,
+    },
+    {
+      path: "/logout",
+      element: <ProtectedRoute component={<Logout />} />,
     },
   ];
 
