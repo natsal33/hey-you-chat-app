@@ -5,4 +5,8 @@ python:
 install:
   - pip install -r requirements.txt
 script:
-  - python -m unittest /app/test_routes
+  - python -m unittest ./app/test_routes
+matrix:
+  include:
+    - python: "2.7"
+      script: "flake8"
