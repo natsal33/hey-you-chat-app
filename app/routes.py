@@ -1,7 +1,7 @@
 import datetime
 from flask import Flask, jsonify, request
 import psycopg2
-import json
+import json, os
 from flask_cors import CORS
 from werkzeug.security import check_password_hash, generate_password_hash
 
@@ -13,8 +13,6 @@ SECRET_KEY = os.environ.get('SECRET_KEY') or 'gimme all you got'
 app.config['SECRET_KEY'] = SECRET_KEY
 
 conn_string = "host='localhost' dbname='nataliesalazar'"
-
-
 
 #region
 # print ("Connecting to database\n	->%s" % (conn_string))
@@ -55,18 +53,20 @@ def index():
 def connected():
     return "you're connected!"
 # Retrieve user data from database, throw error if user is not found.
-@app.route('/api/user')
+@app.route('/api/user', methods=["POST"])
 def getUser():
     # If arguments are passed into the URL, proceed to retrieve from database.
-    if request.args:
-        username = request.args.get("username", None)
+    if request.get_json():
+        request_json = request.get_json()
+        username = request_json['username']
         conn = psycopg2.connect(conn_string)
         cursor = conn.cursor()
         params = {'username': username}
 
         cursor.execute("SELECT * FROM users WHERE username=%(username)s", params) 
-
         userfetched = cursor.fetchall()
+        print("USER FETCHED: ", userfetched)
+
         conn.close()
     else: 
         userfetched = "No user information given to search. Please try again."
@@ -85,13 +85,14 @@ def getUsers():
 # Adds User to "user" and "messages" database with attributes username, location, and fav_color. Assigns location 
 # as "unknown" and fav_color as "green" if not assigned by the argument input. Throws exception if user attempts to
 # create a duplicate username.
-@app.route('/api/create-user')
+@app.route('/api/create-user', methods=["POST"])
 def createUser():
 
-    if request.args:
-        username = request.args.get("username", None)
-        location = request.args.get("location", "unknown")
-        fav_color = request.args.get("fav_color", "green")
+    if request.get_json():
+        request_json = request.get_json()
+        username = request_json['username']
+        location = request_json['location'] or "unknown"
+        fav_color = request_json['fav_color'] or "green"
         conn = psycopg2.connect(conn_string)
         try:
             cursor = conn.cursor()
@@ -111,11 +112,12 @@ def createUser():
     else:
         return "User was not created."
 
-@app.route('/api/delete-user')
+@app.route('/api/delete-user', methods=["POST"])
 def deleteUser():
 
-    if request.args:
-        username = request.args.get("username", None)
+    if request.get_json():
+        request_json = request.get_json()
+        username = request_json['username']
         conn = psycopg2.connect(conn_string)
         try:
             cursor = conn.cursor()
@@ -133,50 +135,50 @@ def deleteUser():
     else:
         return "User was not deleted."
  
-@app.route('/api/get-messages')
+@app.route('/api/get-messages', methods=["POST"])
 def getMessages():
-    if request.args:
-        username = request.args.get("username", None)
+    try:
+        request_json = request.get_json()
+        username = request_json["username"]
         conn = psycopg2.connect(conn_string)
         cursor = conn.cursor()
-        params = {'username': username}
-        cursor.execute("SELECT messages FROM messages WHERE username=%(username)s", params)
-        messagesfetched = cursor.fetchall()
-        conn.close()
-        return messagesfetched
-    else:
-        try:
-            conn = psycopg2.connect(conn_string)
-            cursor = conn.cursor()
+        if username:
+            params = {'username': username}
+            cursor.execute("SELECT messages FROM messages WHERE username=%(username)s", params)
+            messagesfetched = cursor.fetchall()
+            conn.close()
+        else:
             cursor.execute("SELECT messages FROM messages ")
             messagesfetched = cursor.fetchall()
             conn.close()
-            return jsonify(messagesfetched)
-        except:
-            return "Could not retrieve messages. Please try again."
+        return jsonify(messagesfetched)
+    except:
+        return "Could not retrieve messages. Please try again."
 
-@app.route('/api/send-message')
+@app.route('/api/send-message', methods=["POST"])
 def sendMessage():
-    if request.args:
-        username = request.args.get("username", None)
-        message = request.args.get("message", None)
+    try:
+        request_json = request.get_json()
+        username = request_json["username"]
+        message = request_json["message"]
         conn = psycopg2.connect(conn_string)
         cursor = conn.cursor()
         params = {'username': username,
                   'message': message,
-                  'timestamp': datetime.now()
                   }
         cursor.execute("INSERT INTO messages (username, message) VALUES (%(username)s, %(message)s)", params)
         conn.commit()
         conn.close()
         return "Message Sent: {0}".format(message)
-    return "No message sent. Please try again."
+    except:
+        return "No message sent. Please try again."
 
-@app.route('/api/delete-message')
+@app.route('/api/remove-message', methods=["POST"])
 def removeMessage():
-    if request.args:
-        username = request.args.get("username", None)
-        message = request.args.get("message", None)
+    try:
+        request_json = request.get_json()
+        username = request_json["username"]
+        message = request_json["message"]
         conn = psycopg2.connect(conn_string)
         cursor = conn.cursor()
         params = {'username': username,
@@ -188,3 +190,5 @@ def removeMessage():
         conn.commit()
         conn.close()
         return "Message Removed: {0}".format(message)
+    except:
+        return "Message not found to remove."

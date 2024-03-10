@@ -2,6 +2,7 @@ import random
 import string
 import routes
 import unittest
+import requests
 
 
 class testRoutes(unittest.TestCase):
@@ -16,7 +17,8 @@ class testRoutes(unittest.TestCase):
         self.assertEqual(decoded_result,"you're connected!")
 
     def test_user(self):
-        result = self.app.get('api/user?username=Sammy').json
+        # result = self.app.get('api/user?username=Sammy').json
+        result = requests.post('http://localhost:5000/api/user', json={"username": "Sammy"}).json()
         dummyresult =  [16, 'Sammy', 'Helena, MT', 'bandanabananayellow']
         self.assertEqual(result, dummyresult)
 
@@ -25,23 +27,25 @@ class testRoutes(unittest.TestCase):
         self.assertTrue(len(result) > 0)
 
     def test_create_delete_user(self):
+        # Assign random string to username
         username = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(6))
-        create_url = 'api/create-user?username={0}'.format(username)
-        create_result = self.app.get(create_url).data.decode('utf-8')
+        # Create user with randomized username from db
+        create_result = requests.post('http://localhost:5000/api/create-user', json={"username": username, "location": None, "fav_color": None}).text
         self.assertEqual(create_result, "User {0} successfully created!".format(username))
-        delete_url = 'api/delete-user?username={0}'.format(username)
-        delete_result = self.app.get(delete_url).data.decode('utf-8')
+        # Delete randomized username from db
+        delete_result = requests.post('http://localhost:5000/api/delete-user', json={"username": username}).text
         self.assertEqual(delete_result, "User {0} successfully deleted.".format(username))
 
     def test_get_messages(self):
-        result = self.app.get('api/get-messages').json
+        result = requests.post('http://localhost:5000/api/get-messages', json={"username": None}).json()
         self.assertTrue(len(result) > 0)
     
     def test_send_remove_message(self):
-        send_result = self.app.get('api/send-message?username=Sammy&message=testingtesting123').data.decode("utf-8")
-        print("SEND RESULT:", send_result)
+        # Send a mock message to the db
+        send_result = requests.post('http://localhost:5000/api/send-message', json={"username": "Sammy", "message": "testingtesting123"}).text
         self.assertEqual(send_result, "Message Sent: testingtesting123")
-        remove_result = self.app.get('api/delete-message?username=Sammy&message=testingtesting123').data.decode("utf-8")
+        # Remove mock message from the db
+        remove_result = requests.post('http://localhost:5000/api/remove-message', json={"username": "Sammy", "message": "testingtesting123"}).text
         self.assertEqual(remove_result, "Message Removed: testingtesting123")
 
 
