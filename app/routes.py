@@ -2,12 +2,20 @@ from flask import Flask, jsonify, request
 import psycopg2
 import json
 from flask_cors import CORS
+from werkzeug.security import check_password_hash, generate_password_hash
+
+
 
 app = Flask(__name__, static_folder="../build", static_url_path="/")
 CORS(app)
+SECRET_KEY = os.environ.get('SECRET_KEY') or 'gimme all you got'
+app.config['SECRET_KEY'] = SECRET_KEY
 
 conn_string = "host='localhost' dbname='nataliesalazar'"
 
+
+
+#region
 # print ("Connecting to database\n	->%s" % (conn_string))
 
 # conn = psycopg2.connect(conn_string)
@@ -15,8 +23,11 @@ conn_string = "host='localhost' dbname='nataliesalazar'"
 # cursor = conn.cursor()
 
 # cursor.execute("""
-#     INSERT INTO users (id, name) VALUES
-#     (default,'Ben');
+#     INSERT INTO username_passwords (username, password) VALUES 
+#         ('Natalie!', 'Bitches!'),
+#         ('Ben', 'iloveseahawks'),
+#         ('Sammy', 'wheresdaburgers'),
+#         ('Monica', 'Kameron4ever')
 # """) 
 
 # conn.commit()
@@ -32,6 +43,7 @@ conn_string = "host='localhost' dbname='nataliesalazar'"
 	# for most people this isn't very useful so we'll show you how to return
 	# columns as a dictionary (hash) in the next example.
 	# print(records)
+#endregion
 
 @app.route('/')
 @app.route('/index')
