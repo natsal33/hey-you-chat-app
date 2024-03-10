@@ -1,3 +1,4 @@
+import datetime
 from flask import Flask, jsonify, request
 import psycopg2
 import json
@@ -151,6 +152,7 @@ def sendMessage():
         cursor = conn.cursor()
         params = {'username': username,
                   'message': message,
+                  'timestamp': datetime.now()
                   }
         cursor.execute("INSERT INTO messages (username, message) VALUES (%(username)s, %(message)s)", params)
         conn.commit()
