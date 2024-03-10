@@ -1,5 +1,6 @@
-from flask import Flask, request
+from flask import Flask, jsonify, request
 import psycopg2
+import json
 from flask_cors import CORS
 
 app = Flask(__name__, static_folder="../build", static_url_path="/")
@@ -37,6 +38,9 @@ conn_string = "host='localhost' dbname='nataliesalazar'"
 def index():
     return app.send_static_file("index.html")
 
+@app.route('/api/connected')
+def connected():
+    return "you're connected!"
 # Retrieve user data from database, throw error if user is not found.
 @app.route('/api/user')
 def getUser():
@@ -53,7 +57,7 @@ def getUser():
         conn.close()
     else: 
         userfetched = "No user information given to search. Please try again."
-    return userfetched
+    return jsonify(userfetched[0])
 
 # Retrieve all users logged in the database
 @app.route('/api/get-all-users')
@@ -63,8 +67,7 @@ def getUsers():
     cursor.execute("SELECT * FROM users")
     users = cursor.fetchall()
     conn.close()
-
-    return users
+    return jsonify(users)
 
 # Adds User to "user" and "messages" database with attributes username, location, and fav_color. Assigns location 
 # as "unknown" and fav_color as "green" if not assigned by the argument input. Throws exception if user attempts to
@@ -94,6 +97,28 @@ def createUser():
             return("{0} already exists, please choose a new one!".format(username))
     else:
         return "User was not created."
+
+@app.route('/api/delete-user')
+def deleteUser():
+
+    if request.args:
+        username = request.args.get("username", None)
+        conn = psycopg2.connect(conn_string)
+        try:
+            cursor = conn.cursor()
+            params = {
+                'username': username,
+            }
+            cursor.execute("""
+                    DELETE FROM users WHERE username=%(username)s;
+            """, params);
+            conn.commit()
+            conn.close()
+            return("User {0} successfully deleted.".format(username))
+        except psycopg2.Error as err:
+            return("{0} does not exist.".format(username))
+    else:
+        return "User was not deleted."
  
 @app.route('/api/get-messages')
 def getMessages():
