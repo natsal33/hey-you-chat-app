@@ -138,7 +138,7 @@ def getMessages():
             cursor.execute("SELECT messages FROM messages ")
             messagesfetched = cursor.fetchall()
             conn.close()
-            return messagesfetched
+            return jsonify(messagesfetched)
         except:
             return "Could not retrieve messages. Please try again."
 
@@ -157,3 +157,20 @@ def sendMessage():
         conn.close()
         return "Message Sent: {0}".format(message)
     return "No message sent. Please try again."
+
+@app.route('/api/delete-message')
+def removeMessage():
+    if request.args:
+        username = request.args.get("username", None)
+        message = request.args.get("message", None)
+        conn = psycopg2.connect(conn_string)
+        cursor = conn.cursor()
+        params = {'username': username,
+                  'message': message,
+                  }
+        cursor.execute("""
+                    DELETE FROM messages WHERE username=%(username)s AND message=%(message)s;
+            """, params);
+        conn.commit()
+        conn.close()
+        return "Message Removed: {0}".format(message)
