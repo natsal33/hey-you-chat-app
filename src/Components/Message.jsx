@@ -2,12 +2,13 @@ import React from "react";
 import "./Message.css";
 
 function Message(props) {
-  const message = props.message.split(",");
+  const message = props.message;
+  const user = props.user;
   return (
     <div id={props.id}>
       <div className="message">
-        <h4>{message[1]}: </h4>
-        <p>{message[2]} </p>
+        <h4>{user}: </h4>
+        <p>{message} </p>
       </div>
     </div>
   );

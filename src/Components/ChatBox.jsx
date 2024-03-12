@@ -8,9 +8,10 @@ import "./ChatBox.css";
 function ChatBox(props) {
   const chat_data = props.chat_data;
   console.log("CHAT DATA: ", chat_data);
-  // const [messages, updateMessages] = useState();
+
+  const [messages, updateMessages] = useState();
   // useLayoutEffect(() => {
-  //   getMessages();
+  //   getMessages();s
   // }, []);
 
   // async function getMessages() {
@@ -20,16 +21,16 @@ function ChatBox(props) {
   //   updateMessages(response_messages);
   // }
 
-  // const takeInputMessage = (inMessage) => {
-  //   let oldMessages = messages;
-  //   oldMessages.push({ name: inMessage.name, message: inMessage.message });
-  // };
+  const takeInputMessage = (inMessage) => {
+    let oldMessages = messages;
+    oldMessages.push({ name: inMessage.name, message: inMessage.message });
+  };
   return (
     <div className="chat-box">
-      <UsersBox />
+      <UsersBox users={props.chat_data["users"]} />
       <div className="message-input-box">
-        {/* <MessageBoard messages={messages} />
-        <InputBox send={takeInputMessage} /> */}
+        <MessageBoard messages={props.chat_data["messages"]} />
+        <InputBox send={takeInputMessage} />
       </div>
     </div>
   );
