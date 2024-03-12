@@ -64,13 +64,18 @@ def getUser():
         params = {'username': username}
 
         cursor.execute("SELECT * FROM users WHERE username=%(username)s", params) 
-        userfetched = cursor.fetchall()
-        print("USER FETCHED: ", userfetched)
+        user_fetched = cursor.fetchall()[0]
+        user_fetched_dict = {
+            "id": user_fetched[0],
+            "username": user_fetched[1],
+            "location": user_fetched[2],
+            "fav_color": user_fetched[3],
+        }
 
         conn.close()
     else: 
-        userfetched = "No user information given to search. Please try again."
-    return jsonify(userfetched[0])
+        user_fetched_dict = "No user information given to search. Please try again."
+    return jsonify(user_fetched_dict)
 
 # Retrieve all users logged in the database
 @app.route('/api/get-all-users')
@@ -79,8 +84,15 @@ def getUsers():
     cursor = conn.cursor()
     cursor.execute("SELECT * FROM users")
     users = cursor.fetchall()
+    users_fetched_dict = list(map(lambda user:  {
+            "id": user[0],
+            "username": user[1],
+            "location": user[2],
+            "fav_color": user[3],
+        }, users))
     conn.close()
-    return jsonify(users)
+    print("USERS FETCHED: ", users_fetched_dict)
+    return jsonify(users_fetched_dict)
 
 # Adds User to "user" and "messages" database with attributes username, location, and fav_color. Assigns location 
 # as "unknown" and fav_color as "green" if not assigned by the argument input. Throws exception if user attempts to
@@ -129,6 +141,7 @@ def deleteUser():
             """, params);
             conn.commit()
             conn.close()
+            print("User {0} successfully deleted.".format(username))
             return("User {0} successfully deleted.".format(username))
         except psycopg2.Error as err:
             return("{0} does not exist.".format(username))
@@ -144,14 +157,20 @@ def getMessages():
         cursor = conn.cursor()
         if username:
             params = {'username': username}
-            cursor.execute("SELECT messages FROM messages WHERE username=%(username)s", params)
-            messagesfetched = cursor.fetchall()
+            cursor.execute("SELECT * FROM messages WHERE username=%(username)s", params)
+            messages_fetched = cursor.fetchall()
             conn.close()
         else:
-            cursor.execute("SELECT messages FROM messages ")
-            messagesfetched = cursor.fetchall()
+            cursor.execute("SELECT * FROM messages ")
+            messages_fetched = cursor.fetchall()
             conn.close()
-        return jsonify(messagesfetched)
+        messages_fetched_dict = list(map(lambda message: {
+                "id": message[0],
+                "username": message[1],
+                "message": message[2],
+                "timestamp": message[3]
+            }, messages_fetched))
+        return jsonify(messages_fetched_dict)
     except:
         return "Could not retrieve messages. Please try again."
 

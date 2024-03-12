@@ -19,7 +19,12 @@ class testRoutes(unittest.TestCase):
     def test_user(self):
         # result = self.app.get('api/user?username=Sammy').json
         result = requests.post('http://localhost:5000/api/user', json={"username": "Sammy"}).json()
-        dummyresult =  [16, 'Sammy', 'Helena, MT', 'bandanabananayellow']
+        dummyresult =  {
+            "id": 16,
+            "username": "Sammy",
+            "location": "Helena, MT",
+            "fav_color": "bandanabananayellow"
+        }
         self.assertEqual(result, dummyresult)
 
     def test_get_all_users(self):
