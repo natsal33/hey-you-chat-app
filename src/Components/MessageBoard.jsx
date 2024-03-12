@@ -1,20 +1,22 @@
-import { React, useState, useEffect } from "react";
+import { React, useState, useEffect, useLayoutEffect } from "react";
 import Message from "./Message";
 import "./MessageBoard.css";
+import _uniqueId from "lodash/uniqueId";
 
 function MessageBoard(props) {
   const [messageObjects, updateMessageObjects] = useState();
-  console.log(props.messages);
 
   useEffect(() => {
     updateMessages();
   }, []);
 
   async function updateMessages() {
-    const newMessageObjects = props.messages.map((message) => (
-      <Message name={message.name} message={message.message} />
-    ));
-    updateMessageObjects(newMessageObjects);
+    if (props.messages) {
+      const newMessageObjects = props.messages.map((message) => (
+        <Message message={message[0]} id={_uniqueId("prefix-")} />
+      ));
+      updateMessageObjects(newMessageObjects);
+    }
   }
 
   return (

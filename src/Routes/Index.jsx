@@ -3,8 +3,6 @@ import {
   RouterProvider,
   createRoutesFromElements,
 } from "react-router-dom";
-import { useAuth } from "../Provider/AuthProvider.js";
-import { ProtectedRoute } from "./ProtectedRoute.jsx";
 import Root from "./Root.jsx";
 import About from "./About.jsx";
 import Login from "./Login.jsx";
@@ -24,11 +22,11 @@ const Routes = () => {
   const routesForAuthenticatedOnly = [
     {
       path: "/chat",
-      element: <ProtectedRoute component={<Chat />} />,
+      element: <Chat />,
     },
     {
       path: "/logout",
-      element: <ProtectedRoute component={<Logout />} />,
+      element: <Logout />,
     },
   ];
 

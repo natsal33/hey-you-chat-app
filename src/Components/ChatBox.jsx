@@ -1,22 +1,23 @@
-import { React, useState } from "react";
+import { React, useState, useContext, useLayoutEffect } from "react";
+import axios from "axios";
 import InputBox from "./InputBox";
 import UsersBox from "./UsersBox";
 import MessageBoard from "./MessageBoard";
 import "./ChatBox.css";
 
 function ChatBox() {
-  const [messages, updateMessages] = useState([
-    { name: "Natalie", message: "Hey, you, How're you doing today?" },
-    {
-      name: "Sammy",
-      message: "I'm pretty hungry today, mom. Where's my breakfast?",
-    },
-    {
-      name: "Ben",
-      message: "Don't listen to him, he's already had breakfast this morning!",
-    },
-    { name: "Sammy", message: "Beeeeeen, don't tell her!!" },
-  ]);
+  const [messages, updateMessages] = useState();
+  useLayoutEffect(() => {
+    getMessages();
+  }, []);
+
+  async function getMessages() {
+    const messages_url = "http://localhost:5000/api/get-messages";
+    const response = await axios.post(messages_url, { username: "" });
+    const response_messages = response.data;
+    updateMessages(response_messages);
+  }
+
   const takeInputMessage = (inMessage) => {
     let oldMessages = messages;
     oldMessages.push({ name: inMessage.name, message: inMessage.message });
