@@ -1,11 +1,18 @@
-import React from "react";
+import { React, useEffect, useState } from "react";
 import "./UsersBox.css";
+const _ = require("lodash");
 
 function UsersBox(props) {
   const users = props.users;
-  console.log("USERS PROPS: ", users);
+  const [user_objects, update_user_objects] = useState();
 
-  const user_objects = users.map((user) => <h4>{user["username"]}</h4>);
+  useEffect(() => {
+    if (users) {
+      update_user_objects(
+        users.map((user) => <h4 key={_.uniqueId("")}>{user["username"]}</h4>)
+      );
+    }
+  }, [users]);
 
   return (
     <div className="users-online">

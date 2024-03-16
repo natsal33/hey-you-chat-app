@@ -5,24 +5,23 @@ const _ = require("lodash");
 
 function MessageBoard(props) {
   const [messageObjects, updateMessageObjects] = useState();
-  console.log("MESSAGE BOARD DATA: ", props.messages);
+  const in_messages = props.chat_data["messages"];
 
   useEffect(() => {
-    updateMessages();
-  }, []);
-
-  async function updateMessages() {
-    if (props.messages) {
-      const newMessageObjects = props.messages.map((message) => (
+    console.log("UPDATING MESSAGES: ", props.chat_data);
+    if (in_messages) {
+      const newMessageObjects = in_messages.map((message) => (
         <Message
           message={message["message"]}
           user={message["username"]}
-          id={_.uniqueId("")}
+          timestamp={message["timestamp"]}
+          key={_.uniqueId("")}
         />
       ));
       updateMessageObjects(newMessageObjects);
+      console.log("NEW MESSAGE COMPONENTS: ", newMessageObjects);
     }
-  }
+  }, [in_messages]);
 
   return (
     <div className="message-board">

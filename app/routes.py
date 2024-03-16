@@ -156,7 +156,7 @@ def getMessages():
         cursor = conn.cursor()
         if username:
             params = {'username': username}
-            cursor.execute("SELECT * FROM messages WHERE username=%(username)s", params)
+            cursor.execute("SELECT * FROM messages WHERE username=%(username)s ORDER BY timestamp", params)
             messages_fetched = cursor.fetchall()
             conn.close()
         else:

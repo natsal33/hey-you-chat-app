@@ -1,15 +1,16 @@
 import { React, useState } from "react";
 import "./InputBox.css";
 
-function InputBox({ send }) {
+function InputBox(props) {
   const [message, updateMessage] = useState("");
 
   async function handleSubmit(e) {
-    send({
-      name: "me",
+    e.preventDefault();
+    props.send({
+      username: "Natalie!",
       message: message,
     });
-    e.preventDefault();
+    updateMessage("");
   }
 
   return (
@@ -18,6 +19,8 @@ function InputBox({ send }) {
         <input
           type="text"
           onChange={(e) => updateMessage(e.target.value)}
+          placeholder="Type your message..."
+          value={message}
         ></input>
         <input type="submit" value="Send" />
       </form>
