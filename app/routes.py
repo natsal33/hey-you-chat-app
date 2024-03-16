@@ -91,7 +91,6 @@ def getUsers():
             "fav_color": user[3],
         }, users))
     conn.close()
-    print("USERS FETCHED: ", users_fetched_dict)
     return jsonify(users_fetched_dict)
 
 # Adds User to "user" and "messages" database with attributes username, location, and fav_color. Assigns location 
@@ -170,6 +169,7 @@ def getMessages():
                 "message": message[2],
                 "timestamp": message[3]
             }, messages_fetched))
+        print("MESSAGES FETCHED: ", messages_fetched_dict)
         return jsonify(messages_fetched_dict)
     except:
         return "Could not retrieve messages. Please try again."
