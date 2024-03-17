@@ -52,7 +52,29 @@ def index():
 @app.route('/api/connected')
 def connected():
     return "you're connected!"
-# Retrieve user data from database, throw error if user is not found.
+
+@app.route('/api/login', methods=["POST"])
+def login():
+    if request.get_json():
+        request_json = request.get_json()
+        username = request_json['username']
+        password = request_json['password']
+
+        conn = psycopg2.connect(conn_string)
+        cursor = conn.cursor()
+        params = {'username': username, 'password': password}
+        cursor.execute("SELECT * FROM username_passwords WHERE username=%(username)s AND password=%(password)s", params)
+        user_fetched = cursor.fetchone()
+        if user_fetched:
+            print("USER FOUND!")
+        conn.close()
+    return jsonify("logged in")
+
+# @app.route('/api/signup')
+# def signup():
+
+
+
 @app.route('/api/user', methods=["POST"])
 def getUser():
     # If arguments are passed into the URL, proceed to retrieve from database.
@@ -77,7 +99,6 @@ def getUser():
         user_fetched_dict = "No user information given to search. Please try again."
     return jsonify(user_fetched_dict)
 
-# Retrieve all users logged in the database
 @app.route('/api/get-all-users')
 def getUsers():
     conn = psycopg2.connect(conn_string)
@@ -93,9 +114,6 @@ def getUsers():
     conn.close()
     return jsonify(users_fetched_dict)
 
-# Adds User to "user" and "messages" database with attributes username, location, and fav_color. Assigns location 
-# as "unknown" and fav_color as "green" if not assigned by the argument input. Throws exception if user attempts to
-# create a duplicate username.
 @app.route('/api/create-user', methods=["POST"])
 def createUser():
 
