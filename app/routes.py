@@ -1,9 +1,12 @@
 import datetime
+import time
 from flask import Flask, jsonify, request
 import psycopg2
 import json, os
+import bcrypt
+import jwt
 from flask_cors import CORS
-from werkzeug.security import check_password_hash, generate_password_hash
+
 
 
 
@@ -22,11 +25,12 @@ conn_string = "host='localhost' dbname='nataliesalazar'"
 # cursor = conn.cursor()
 
 # cursor.execute("""
-#     INSERT INTO username_passwords (username, password) VALUES 
-#         ('Natalie!', 'Bitches!'),
-#         ('Ben', 'iloveseahawks'),
-#         ('Sammy', 'wheresdaburgers'),
-#         ('Monica', 'Kameron4ever')
+#     CREATE TABLE usearnames_passwords(
+#             user_id SERIAL PRIMARY KEY,
+#             username VARCHAR(50) UNIQUE NOT NULL,
+#             password_hash BYTEA NOT NULL,
+#             salt BYTEA NOT NULL
+#     )
 # """) 
 
 # conn.commit()
@@ -55,25 +59,69 @@ def connected():
 
 @app.route('/api/login', methods=["POST"])
 def login():
-    if request.get_json():
+    try:
         request_json = request.get_json()
         username = request_json['username']
-        password = request_json['password']
+        encoded_password = request_json['password'].encode('utf-8')
 
         conn = psycopg2.connect(conn_string)
         cursor = conn.cursor()
-        params = {'username': username, 'password': password}
-        cursor.execute("SELECT * FROM username_passwords WHERE username=%(username)s AND password=%(password)s", params)
+        params = {'username': username}
+        cursor.execute("SELECT * FROM usernames_passwords WHERE username=%(username)s", params)
         user_fetched = cursor.fetchone()
         if user_fetched:
-            print("USER FOUND!")
-        conn.close()
-    return jsonify("logged in")
+            print("USER FETCHED: ", user_fetched)
+            username_fetched, hash_fetched, salt_fetched = user_fetched[1], user_fetched[2].tobytes(), user_fetched[3].tobytes();
+            print("HASH FETCHED: ", hash_fetched)
+            conn.close()
 
-# @app.route('/api/signup')
-# def signup():
+            password_match = bcrypt.checkpw(encoded_password, hash_fetched)
+            print("PASSWORD MATCH: ", password_match)
+            
+            token = jwt.encode({"username": username_fetched, "exp": time.time() + 6000}, "thisismyuniquepassword", )
 
+            return jsonify({"token": token})
+        else:
+            print("user not found")
+            return jsonify("User not found.")
+    except psycopg2.Error as error: 
+        return jsonify(error)
 
+@app.route('/api/signup', methods=["POST"])
+def signup():
+    print("REQUEST: ", request.json)
+    if request.get_json():
+        request_json = request.json
+        username = request_json['username']
+        password = request_json['password'].encode('utf-8')
+        salt = bcrypt.gensalt()
+        hash = bcrypt.hashpw(password, salt)
+        print("HASH: ", hash)
+        location = "unknown"
+        fav_color = "green"
+        conn = psycopg2.connect(conn_string)
+        try:
+            cursor = conn.cursor()
+            params = {
+                'username': username,
+                'password_hash': hash,
+                'salt': salt,
+                'location': location,
+                'fav_color': fav_color
+            }
+            cursor.execute("""
+                    INSERT INTO users (id, username, location, fav_color) VALUES (default, %(username)s, %(location)s, %(fav_color)s);
+                    INSERT INTO usernames_passwords (user_id, username, password_hash, salt) VALUES(default, %(username)s, %(password_hash)s, %(salt)s)
+                           """, params);
+
+            conn.commit()
+            conn.close()
+            return("User {0} successfully created!".format(username))
+        except psycopg2.Error as err:
+            print("ERROR: ",err)
+            return("{0} already exists, please choose a new one!".format(username))
+    else:
+        return "User was not created."
 
 @app.route('/api/user', methods=["POST"])
 def getUser():

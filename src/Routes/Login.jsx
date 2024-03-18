@@ -1,21 +1,38 @@
 import React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
 import { Link } from "react-router-dom";
+import AuthHelperMethods from "../Components/AuthHelperMethods";
 import "./Login.css";
 
 const Login = () => {
   const navigate = useNavigate();
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const Auth = new AuthHelperMethods();
 
   const handleFormSubmit = (e) => {
-    console.log("STEP 1: made it into handle form submit");
     e.preventDefault();
     const form = e.target;
     const formData = new FormData(form);
-    console.log("STEP 2: Form Data: ", Object.fromEntries(formData.entries()));
+    const username = formData.get("username");
+    const password = formData.get("password");
+    console.log("FORM DATA: ", formData.get("password"));
+    Auth.login(username, password)
+      .then((res) => {
+        if (res === false) {
+          return alert("Sorry those credentials don't exist!");
+        }
+        navigate("/chat");
+      })
+      .catch((err) => {
+        alert(err);
+      });
   };
+
+  useEffect(() => {
+    if (Auth.loggedIn()) {
+      navigate("/chat");
+    }
+  }, []);
 
   return (
     <div>

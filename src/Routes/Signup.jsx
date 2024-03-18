@@ -1,12 +1,12 @@
-import React, { Component, useState } from "react";
-import AuthHelperMethods from "../Provider/AuthHelperMethods";
+import React, { Component, useState, useEffect } from "react";
+import AuthHelperMethods from "../Components/AuthHelperMethods";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 
 function Signup() {
   const Auth = new AuthHelperMethods();
-  const navigation = new useNavigate();
+  const navigate = new useNavigate();
 
   const [username, updateUsername] = useState("");
   const [password, updatePassword] = useState("");
@@ -14,52 +14,50 @@ function Signup() {
   const handleFormSubmit = (e) => {
     e.preventDefault();
 
+    //Add this part right here
     axios
-      .post("/signup", {
+      .post("http://localhost:5000/api/signup", {
         username: username,
         password: password,
       })
       .then((data) => {
         console.log(data);
-        navigation("/login", { replace: true });
+        // navigate("/login");
       });
   };
 
+  useEffect(() => {
+    console.log("USERNAME: ", username);
+    console.log("PASSWORD: ", password);
+  }, []);
+
   return (
-    <React.Fragment>
-      <div className="main-wrapper">
-        <div className="box">
-          <div className="box-header">
-            <h1>Signup</h1>
-          </div>
-          <form className="box-form">
-            <input
-              className="form-item"
-              placeholder="Username"
-              name="username"
-              type="text"
-              onChange={updateUsername((e) => e.target.value)}
-            />
-            <input
-              className="form-item"
-              placeholder="Password"
-              name="password"
-              type="password"
-              onChange={updatePassword((e) => e.target.value)}
-            />
-            <button className="form-submit" onClick={handleFormSubmit}>
-              Signup
-            </button>
-          </form>
-          <Link className="link" to="/login">
-            Already have an account? <span className="link-signup">Login</span>
-          </Link>
-        </div>
-        <div className="signiture">
-          <h1>Template Built & Designed by Roman Chvalbo</h1>
-        </div>
-      </div>
-    </React.Fragment>
+    <div>
+      <h1>Signup</h1>
+      <form className="box-form">
+        <input
+          className="form-item"
+          placeholder="Username"
+          name="username"
+          type="text"
+          onChange={(e) => updateUsername(e.target.value)}
+        />
+        <input
+          className="form-item"
+          placeholder="Password"
+          name="password"
+          type="password"
+          onChange={(e) => updatePassword(e.target.value)}
+        />
+        <button className="form-submit" onClick={handleFormSubmit}>
+          Signup
+        </button>
+      </form>
+      <Link className="link" to="/login">
+        Already have an account? <span className="link-signup">Login</span>
+      </Link>
+      <h1>Template Built & Designed by Roman Chvalbo</h1>
+    </div>
   );
 }
 

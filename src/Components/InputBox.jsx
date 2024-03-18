@@ -7,7 +7,7 @@ function InputBox(props) {
   async function handleSubmit(e) {
     e.preventDefault();
     props.send({
-      username: "Natalie!",
+      username: localStorage.getItem("username"),
       message: message,
     });
     updateMessage("");
