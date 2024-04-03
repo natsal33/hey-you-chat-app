@@ -3,6 +3,7 @@ import AuthHelperMethods from "../Components/AuthHelperMethods";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
+import "./Signup.css";
 
 function Signup() {
   const Auth = new AuthHelperMethods();
@@ -16,7 +17,7 @@ function Signup() {
 
     //Add this part right here
     axios
-      .post("http://localhost:5000/api/signup", {
+      .post("/api/signup", {
         username: username,
         password: password,
       })
@@ -32,8 +33,10 @@ function Signup() {
   }, []);
 
   return (
-    <div>
-      <h1>Signup</h1>
+    <div className="box">
+      <div className="box-header">
+        <h3>Signup</h3>
+      </div>
       <form className="box-form">
         <input
           className="form-item"
@@ -56,7 +59,6 @@ function Signup() {
       <Link className="link" to="/login">
         Already have an account? <span className="link-signup">Login</span>
       </Link>
-      <h1>Template Built & Designed by Roman Chvalbo</h1>
     </div>
   );
 }

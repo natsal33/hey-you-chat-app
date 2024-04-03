@@ -1,4 +1,13 @@
+@import "../global.css";
+
 .message {
-  text-align: left;
   padding: 5px;
+}
+
+.left {
+  text-align: left;
+}
+
+.right {
+  text-align: right;
 }

@@ -1,6 +1,9 @@
 import datetime
 import time
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, render_template
+from flask_socketio import SocketIO, emit
+import subprocess
+
 import psycopg2
 import json, os
 import bcrypt
@@ -10,8 +13,11 @@ from flask_cors import CORS
 
 
 
+
 app = Flask(__name__, static_folder="../build", static_url_path="/")
+socketio = SocketIO(app,debug=True,cors_allowed_origins='*')
 CORS(app)
+
 SECRET_KEY = os.environ.get('SECRET_KEY') or 'gimme all you got'
 app.config['SECRET_KEY'] = SECRET_KEY
 
@@ -48,9 +54,10 @@ conn_string = "host='localhost' dbname='nataliesalazar'"
 	# print(records)
 #endregion
 
-@app.route('/')
-@app.route('/index')
-def index():
+@app.route("/", defaults={"path": ""})
+@app.route("/<string:path>")
+@app.route("/<path:path>")
+def index(path):
     return app.send_static_file("index.html")
 
 @app.route('/api/connected')

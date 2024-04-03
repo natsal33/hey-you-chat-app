@@ -39,7 +39,7 @@ const Login = () => {
       <div className="main-wrapper">
         <div className="box">
           <div className="box-header">
-            <h1>Login</h1>
+            <h3>Login</h3>
           </div>
           <form className="box-form" method="post" onSubmit={handleFormSubmit}>
             <input
@@ -61,9 +61,6 @@ const Login = () => {
           <Link className="link" to="/signup">
             Don't have an account? <span className="link-signup">Signup</span>
           </Link>
-        </div>
-        <div className="signiture">
-          <h1>Template Built & Designed by Roman Chvalbo</h1>
         </div>
       </div>
     </div>

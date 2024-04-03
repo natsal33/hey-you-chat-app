@@ -26,7 +26,7 @@ function ProtectedComponent(props) {
     }
   }, []);
 
-  return <div>{loaded}</div>;
+  return loaded;
 }
 
 export default ProtectedComponent;
