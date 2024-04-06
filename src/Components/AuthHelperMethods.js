@@ -2,11 +2,11 @@ import { jwtDecode } from "jwt-decode";
 
 export default class AuthHelperMethods {
   constructor(domain) {
-    this.domain = "http://localhost:5000";
+    this.domain = "http://localhost:5001";
   }
 
   login = (username, password) => {
-    return this.fetch("http://localhost:5000/api/login", {
+    return this.fetch("http://localhost:5001/api/login", {
       method: "POST",
       body: JSON.stringify({
         username,

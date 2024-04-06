@@ -2,15 +2,19 @@ import { React, useState } from "react";
 import "./InputBox.css";
 
 function InputBox(props) {
+  const send_message = props.send_message;
   const [message, updateMessage] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   async function handleSubmit(e) {
     e.preventDefault();
-    props.send({
+    setIsLoading(true);
+    send_message({
       username: localStorage.getItem("username"),
       message: message,
     });
-    updateMessage("");
+
+    setIsLoading(false);
   }
 
   return (
@@ -22,7 +26,7 @@ function InputBox(props) {
           placeholder="Type your message..."
           value={message}
         ></input>
-        <input type="submit" value="Send" />
+        <input type="submit" value="send" />
       </form>
     </div>
   );

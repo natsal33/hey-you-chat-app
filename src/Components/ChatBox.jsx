@@ -27,7 +27,7 @@ function ChatBox(props) {
         <UsersBox users={chat_data["users"]} />
         <div className="message-input-box">
           <MessageBoard chat_data={chat_data} />
-          <InputBox send={send_message} />
+          <InputBox send_message={send_message} />
           <button onClick={handleLogout}>Logout</button>
         </div>
       </div>

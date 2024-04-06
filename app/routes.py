@@ -3,7 +3,6 @@ import time
 from flask import Flask, jsonify, request, render_template
 from flask_socketio import SocketIO, emit
 import subprocess
-
 import psycopg2
 import json, os
 import bcrypt
@@ -20,6 +19,9 @@ CORS(app)
 
 SECRET_KEY = os.environ.get('SECRET_KEY') or 'gimme all you got'
 app.config['SECRET_KEY'] = SECRET_KEY
+
+if __name__ == '__main__':
+    socketio.run(app, port=5001)
 
 conn_string = "host='localhost' dbname='nataliesalazar'"
 
@@ -60,9 +62,28 @@ conn_string = "host='localhost' dbname='nataliesalazar'"
 def index(path):
     return app.send_static_file("index.html")
 
-@app.route('/api/connected')
+@app.route('/api/connect')
 def connected():
     return "you're connected!"
+
+@socketio.on("connect")
+def connectedWebSocket():
+    print("client has connected")
+    emit("after connect", {"data":"Natalie is connected"})
+
+@socketio.on('message')
+def handle_message(data):
+    print("data from the front end: ", str(data))
+    emit("after message", "message sent to backend!", broadcast=True)
+
+@socketio.on_error()
+def handle_error(e):
+    print(request.event["message"])
+
+@socketio.on("disconnect")
+def disconnected():
+    print("client has disconnected")
+    emit("after disconnect", {"data":"Natalie is disconnected"}, broadcast=True)
 
 @app.route('/api/login', methods=["POST"])
 def login():
@@ -242,7 +263,6 @@ def getMessages():
                 "message": message[2],
                 "timestamp": message[3]
             }, messages_fetched))
-        print("MESSAGES FETCHED: ", messages_fetched_dict)
         return jsonify(messages_fetched_dict)
     except:
         return "Could not retrieve messages. Please try again."
