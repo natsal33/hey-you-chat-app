@@ -6,7 +6,6 @@ function Message(props) {
   const message = props.message;
   const user = props.user;
   const timestamp = props.timestamp;
-  console.log("COMPARE: ", user === local_storage_user);
   return (
     <div id={props.id}>
       <div

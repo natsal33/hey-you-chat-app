@@ -68,13 +68,13 @@ def connected():
 
 @socketio.on("connect")
 def connectedWebSocket():
-    print("client has connected")
-    emit("after connect", {"data":"Natalie is connected"})
+    print(f"{request.sid} client has connected")
+    emit("after connect", f"{request.sid} is connected")
 
 @socketio.on('message')
 def handle_message(data):
     print("data from the front end: ", str(data))
-    emit("after message", "message sent to backend!", broadcast=True)
+    emit("after message", data, broadcast=True)
 
 @socketio.on_error()
 def handle_error(e):
@@ -82,8 +82,7 @@ def handle_error(e):
 
 @socketio.on("disconnect")
 def disconnected():
-    print("client has disconnected")
-    emit("after disconnect", {"data":"Natalie is disconnected"}, broadcast=True)
+    print(f"{request.sid} client has disconnected")
 
 @app.route('/api/login', methods=["POST"])
 def login():

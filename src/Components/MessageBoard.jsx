@@ -8,7 +8,6 @@ function MessageBoard(props) {
   const in_messages = props.chat_data["messages"];
 
   useEffect(() => {
-    console.log("UPDATING MESSAGES: ", props.chat_data);
     if (in_messages) {
       const newMessageObjects = in_messages.map((message) => (
         <Message
@@ -19,7 +18,6 @@ function MessageBoard(props) {
         />
       ));
       updateMessageObjects(newMessageObjects);
-      console.log("NEW MESSAGE COMPONENTS: ", newMessageObjects);
     }
   }, [in_messages]);
 

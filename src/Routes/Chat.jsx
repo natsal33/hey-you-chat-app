@@ -3,7 +3,6 @@ import { useLoaderData } from "react-router-dom";
 import axios from "axios";
 import { io } from "socket.io-client";
 import ChatBox from "../Components/ChatBox.jsx";
-import { ConnectionManager } from "../Components/ConnectionManager.jsx";
 
 export function loader() {
   async function message_user_loading() {
@@ -23,20 +22,9 @@ export function loader() {
 function Chat() {
   const loader_data = useLoaderData();
   const [chat_data, update_chat_data] = useState(loader_data);
-  const [buttonStatus, setButtonStatus] = useState(false);
   const [socketInstance, setSocketInstance] = useState("");
 
-  const handleClick = () => {
-    if (buttonStatus === false) {
-      setButtonStatus(true);
-    } else {
-      setButtonStatus(false);
-    }
-  };
-
   async function send_message(message_data) {
-    console.log("Entered send_message function");
-
     socketInstance.emit("message", message_data);
   }
 
@@ -62,42 +50,34 @@ function Chat() {
   }
 
   useEffect(() => {
-    if (buttonStatus === true) {
-      console.log("CONNECTED");
-      const socket = io.connect("http://localhost:5001");
-      console.log("Are we connected? ", socket.connected);
+    const socket = io.connect("http://localhost:5001");
+    console.log("Are we connected? ", socket.connected);
 
-      setSocketInstance(socket);
+    setSocketInstance(socket);
 
-      socket.on("after connect", (data) => {
-        console.log("connect data: ", data);
-      });
-      socket.on("after disconnect", (data) => {
-        console.log("disconnect data: ", data);
-      });
-      socket.on("after message", (data) => {
-        console.log("message data: ", data);
-      });
-      socket.on("connect_error", (data) => {
-        console.log("ERROR: ", data);
-      });
+    socket.on("after connect", (data) => {
+      //flash "USER has connected"
+      console.log(data);
+    });
+    socket.on("after disconnect", (data) => {
+      console.log(data);
+    });
+    socket.on("after message", (data) => {
+      update_messages(data);
+      console.log(data);
+    });
+    socket.on("connect_error", (data) => {
+      console.log("ERROR: ", data);
+    });
 
-      return function cleanup() {
-        socket.disconnect();
-      };
-    }
-  }, [buttonStatus]);
+    return function cleanup() {
+      socket.disconnect();
+    };
+  }, []);
 
   return (
     <div>
-      {!buttonStatus ? (
-        <button onClick={handleClick}>turn chat on</button>
-      ) : (
-        <>
-          <button onClick={handleClick}>turn chat off</button>
-          <ChatBox chat_data={chat_data} send_message={send_message} />
-        </>
-      )}
+      <ChatBox chat_data={chat_data} send_message={send_message} />
     </div>
   );
 }
