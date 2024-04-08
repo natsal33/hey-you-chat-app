@@ -2,10 +2,13 @@
 
 .users-online {
   background-color: rgb(255, 254, 254);
-  border: 2px pink solid;
+  border: 2px #eb8ee8 solid;
   border-radius: 20px;
   box-shadow: 0px 1px 10px 0px rgba(155, 148, 148, 0.63);
   margin: 10px;
   width: 20%;
-  height: 100%;
+}
+
+.username {
+  color: rgb(144, 142, 142);
 }

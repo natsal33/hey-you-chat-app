@@ -3,6 +3,7 @@ import { useLoaderData } from "react-router-dom";
 import axios from "axios";
 import { io } from "socket.io-client";
 import ChatBox from "../Components/ChatBox.jsx";
+import "./Chat.css";
 
 export function loader() {
   async function message_user_loading() {
@@ -29,11 +30,11 @@ function Chat() {
   }
 
   async function update_messages(message_data) {
-    const send_message_url = "http://localhost:5001/api/send-message";
-    await axios.post(send_message_url, {
-      username: message_data["username"],
-      message: message_data["message"],
-    });
+    // const send_message_url = "http://localhost:5001/api/send-message";
+    // await axios.post(send_message_url, {
+    //   username: message_data["username"],
+    //   message: message_data["message"],
+    // });
 
     const messages_url = "http://localhost:5001/api/get-messages";
     const new_message_response = await axios.post(messages_url, {
@@ -51,14 +52,10 @@ function Chat() {
 
   useEffect(() => {
     const socket = io.connect("http://localhost:5001");
-    console.log("Are we connected? ", socket.connected);
 
     setSocketInstance(socket);
 
-    socket.on("after connect", (data) => {
-      //flash "USER has connected"
-      console.log(data);
-    });
+    socket.on("after connect", (data) => {});
     socket.on("after disconnect", (data) => {
       console.log(data);
     });
@@ -76,7 +73,7 @@ function Chat() {
   }, []);
 
   return (
-    <div>
+    <div className="chat">
       <ChatBox chat_data={chat_data} send_message={send_message} />
     </div>
   );

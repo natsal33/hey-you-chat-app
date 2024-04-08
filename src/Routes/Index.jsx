@@ -12,17 +12,18 @@ const Routes = () => {
       element: <Root />,
       children: [
         {
+          id: "index",
+          path: "/",
+          element: <ProtectedComponent PassedComponent={<Chat />} />,
+          loader: chatLoader,
+        },
+        {
           path: "/login",
           element: <Login />,
         },
         {
           path: "/signup",
           element: <Signup />,
-        },
-        {
-          path: "/chat",
-          element: <ProtectedComponent PassedComponent={<Chat />} />,
-          loader: chatLoader,
         },
       ],
     },

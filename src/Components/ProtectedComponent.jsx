@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import AuthHelperMethods from "./AuthHelperMethods";
+import "./ProtectedComponent.css";
 
 function ProtectedComponent(props) {
   const PassedComponent = props.PassedComponent;
@@ -14,19 +15,19 @@ function ProtectedComponent(props) {
     } else {
       try {
         const confirm = Auth.getConfirm();
-        console.log("confirmation is:", confirm);
         if (confirm) {
           updateLoaded(PassedComponent);
         }
       } catch (err) {
         console.log(err);
         Auth.logout();
+        updateLoaded(null);
         navigate("/login");
       }
     }
   }, []);
 
-  return loaded;
+  return <div className="ProtectedComponent">{loaded}</div>;
 }
 
 export default ProtectedComponent;

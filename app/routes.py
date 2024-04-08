@@ -74,7 +74,21 @@ def connectedWebSocket():
 @socketio.on('message')
 def handle_message(data):
     print("data from the front end: ", str(data))
-    emit("after message", data, broadcast=True)
+    try:
+        username = data['username']
+        message = data["message"]
+        conn = psycopg2.connect(conn_string)
+        cursor = conn.cursor()
+        params = {'username': username,
+                  'message': message,
+                  }
+        cursor.execute("INSERT INTO messages (username, message) VALUES (%(username)s, %(message)s)", params)
+        conn.commit()
+        conn.close()
+        emit("after message", data, broadcast=True)
+        return "Message Sent: {0}".format(message)
+    except:
+        return "No message sent. Please try again."
 
 @socketio.on_error()
 def handle_error(e):
@@ -104,19 +118,20 @@ def login():
 
             password_match = bcrypt.checkpw(encoded_password, hash_fetched)
             print("PASSWORD MATCH: ", password_match)
+            if (password_match):
+                token = jwt.encode({"username": username_fetched, "exp": time.time() + 6000}, "thisismyuniquepassword", )
+                return jsonify({"authorized": True, "token": token})
+            else:
+                return jsonify({"authorized": False, "message": "password does not match"});
             
-            token = jwt.encode({"username": username_fetched, "exp": time.time() + 6000}, "thisismyuniquepassword", )
-
-            return jsonify({"token": token})
         else:
             print("user not found")
-            return jsonify("User not found.")
+            return jsonify({"authorized": False, "message": "user not found"})
     except psycopg2.Error as error: 
         return jsonify(error)
 
 @app.route('/api/signup', methods=["POST"])
 def signup():
-    print("REQUEST: ", request.json)
     if request.get_json():
         request_json = request.json
         username = request_json['username']
@@ -137,108 +152,29 @@ def signup():
                 'fav_color': fav_color
             }
             cursor.execute("""
-                    INSERT INTO users (id, username, location, fav_color) VALUES (default, %(username)s, %(location)s, %(fav_color)s);
                     INSERT INTO usernames_passwords (user_id, username, password_hash, salt) VALUES(default, %(username)s, %(password_hash)s, %(salt)s)
                            """, params);
 
             conn.commit()
             conn.close()
-            return("User {0} successfully created!".format(username))
+            return jsonify({"success": True, "message": "User {0} successfully created!".format(username)})
         except psycopg2.Error as err:
-            print("ERROR: ",err)
-            return("{0} already exists, please choose a new one!".format(username))
+            return jsonify({"success": False, "message": "{0} already exists, please choose a new one!".format(username)})
     else:
-        return "User was not created."
-
-@app.route('/api/user', methods=["POST"])
-def getUser():
-    # If arguments are passed into the URL, proceed to retrieve from database.
-    if request.get_json():
-        request_json = request.get_json()
-        username = request_json['username']
-        conn = psycopg2.connect(conn_string)
-        cursor = conn.cursor()
-        params = {'username': username}
-
-        cursor.execute("SELECT * FROM users WHERE username=%(username)s", params) 
-        user_fetched = cursor.fetchall()[0]
-        user_fetched_dict = {
-            "id": user_fetched[0],
-            "username": user_fetched[1],
-            "location": user_fetched[2],
-            "fav_color": user_fetched[3],
-        }
-
-        conn.close()
-    else: 
-        user_fetched_dict = "No user information given to search. Please try again."
-    return jsonify(user_fetched_dict)
+        return jsonify({"success": False, "message":"User was not created."})
 
 @app.route('/api/get-all-users')
 def getUsers():
     conn = psycopg2.connect(conn_string)
     cursor = conn.cursor()
-    cursor.execute("SELECT * FROM users")
+    cursor.execute("SELECT user_id, username FROM usernames_passwords")
     users = cursor.fetchall()
     users_fetched_dict = list(map(lambda user:  {
             "id": user[0],
             "username": user[1],
-            "location": user[2],
-            "fav_color": user[3],
         }, users))
     conn.close()
     return jsonify(users_fetched_dict)
-
-@app.route('/api/create-user', methods=["POST"])
-def createUser():
-
-    if request.get_json():
-        request_json = request.get_json()
-        username = request_json['username']
-        location = request_json['location'] or "unknown"
-        fav_color = request_json['fav_color'] or "green"
-        conn = psycopg2.connect(conn_string)
-        try:
-            cursor = conn.cursor()
-            params = {
-                'username': username,
-                'location': location,
-                'fav_color': fav_color
-            }
-            cursor.execute("""
-                    INSERT INTO users (id, username, location, fav_color) VALUES (default, %(username)s, %(location)s, %(fav_color)s);
-            """, params);
-            conn.commit()
-            conn.close()
-            return("User {0} successfully created!".format(username))
-        except psycopg2.Error as err:
-            return("{0} already exists, please choose a new one!".format(username))
-    else:
-        return "User was not created."
-
-@app.route('/api/delete-user', methods=["POST"])
-def deleteUser():
-
-    if request.get_json():
-        request_json = request.get_json()
-        username = request_json['username']
-        conn = psycopg2.connect(conn_string)
-        try:
-            cursor = conn.cursor()
-            params = {
-                'username': username,
-            }
-            cursor.execute("""
-                    DELETE FROM users WHERE username=%(username)s;
-            """, params);
-            conn.commit()
-            conn.close()
-            print("User {0} successfully deleted.".format(username))
-            return("User {0} successfully deleted.".format(username))
-        except psycopg2.Error as err:
-            return("{0} does not exist.".format(username))
-    else:
-        return "User was not deleted."
  
 @app.route('/api/get-messages', methods=["POST"])
 def getMessages():
@@ -265,24 +201,6 @@ def getMessages():
         return jsonify(messages_fetched_dict)
     except:
         return "Could not retrieve messages. Please try again."
-
-@app.route('/api/send-message', methods=["POST"])
-def sendMessage():
-    try:
-        request_json = request.get_json()
-        username = request_json["username"]
-        message = request_json["message"]
-        conn = psycopg2.connect(conn_string)
-        cursor = conn.cursor()
-        params = {'username': username,
-                  'message': message,
-                  }
-        cursor.execute("INSERT INTO messages (username, message) VALUES (%(username)s, %(message)s)", params)
-        conn.commit()
-        conn.close()
-        return "Message Sent: {0}".format(message)
-    except:
-        return "No message sent. Please try again."
 
 @app.route('/api/remove-message', methods=["POST"])
 def removeMessage():

@@ -1,14 +1,31 @@
 # Hey You! - a place to chat (IN PROGRESS)
 
+Hey You! is a real-time web chat application with a clean and appealing aesthetic. Users an sign up and chat, while knowing they can trust that their login informaiton is protected.
+
 ## Features
 
-- Real-time messaging: Users can send and receive messages in real-time.
+- WebSocket Communication: Bi-directional communication to enable users to send and receive messages in realtime.
 - User authentication using JSON Web Tokens: Users can register, login, and authenticate themselves to access the chat features.
 - Secure storage via PostgresSQL: User and message data is securely stored in a PostgreSQL database.
 - Lightweight API: The API built with Flask provides efficient communication between the front-end and the database.
 
-UPDATE 3/18/24:
-Hey You! is completely functional in login, logout, signup, and real-time messaging. The front-end and UI/UX is still in progress.
+#### UPDATE 4/8/24:
+
+Hey You! is functional and the UI/UX is complete. The next step will be to deploy it to AWS EC2 and initialize the postgres DB using AWS RDS.
+
+## Demo
+
+### Chat Page
+
+<img src="src/pics/Chat_Demo_Pic.png" style="width: 80%">
+
+### Login Page
+
+<img src="src/pics/Login_Demo_Pic.png" style="width: 80%">
+
+### Signup Page
+
+<img src="src/pics/Signup_Demo_Pic.png" style="width: 80%">
 
 ## Setup Instructions
 
@@ -32,50 +49,48 @@ Hey You! is completely functional in login, logout, signup, and real-time messag
    npm start
    ```
 
-<!-- ### Backend Setup
+### Backend Setup
 
 1. Navigate to the `./app` directory:
 
-    ```
-    cd app
-    ```
+   ```
+   cd app
+   ```
 
 2. Create a virtual environment:
 
-    ```
-    python3 -m venv venv
-    ```
+   ```
+   python3 -m venv venv
+   ```
 
 3. Activate the virtual environment:
 
-    - On macOS and Linux:
+   - On macOS and Linux:
 
-        ```
-        source venv/bin/activate
-        ```
+     ```
+     source venv/bin/activate
+     ```
 
-    - On Windows:
+   - On Windows:
 
-        ```
-        venv\Scripts\activate
-        ```
-
+     ```
+     venv\Scripts\activate
+     ```
 
 4. Set up the PostgreSQL database:
 
-    - Install PostgreSQL if you haven't already: [PostgreSQL Downloads](https://www.postgresql.org/download/)
-    - Create a new database and note down the credentials.
+   - Install PostgreSQL if you haven't already: [PostgreSQL Downloads](https://www.postgresql.org/download/)
+   - Create a new database and note down the credentials.
 
 5. Configure the Flask application:
 
-    - Rename `.env.example` to `.env`.
-    - Update the `DATABASE_URL` variable in `.env` with your PostgreSQL database URL.
+   - Run `export FLASK_APP=routes.py"
 
 6. Run the Flask application:
 
-    ```
-    flask run
-    ``` -->
+   ```
+   flask run
+   ```
 
 ## Tech Stack
 
@@ -87,6 +102,7 @@ Hey You! is completely functional in login, logout, signup, and real-time messag
 
 - Backend:
 
+  - WebSockets
   - Flask (Python)
 
 - Database:

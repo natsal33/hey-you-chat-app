@@ -5,7 +5,11 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-color: rgb(230, 199, 229);
+  background: linear-gradient(to bottom right, #9cd5d0, #e19dbe);
   min-height: 100vh;
   width: 100%;
+}
+
+.title {
+  color: white;
 }

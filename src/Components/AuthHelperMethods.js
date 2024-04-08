@@ -13,8 +13,10 @@ export default class AuthHelperMethods {
         password,
       }),
     }).then((response) => {
-      this.setToken(response.token);
-      localStorage.setItem("username", username);
+      if (response.authorized) {
+        this.setToken(response.token);
+        localStorage.setItem("username", username);
+      }
       return Promise.resolve(response);
     });
   };
@@ -55,7 +57,6 @@ export default class AuthHelperMethods {
 
   getConfirm = () => {
     let answer = jwtDecode(this.getToken());
-    console.log("Token found!");
     return answer;
   };
 

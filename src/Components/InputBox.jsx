@@ -19,14 +19,15 @@ function InputBox(props) {
 
   return (
     <div className="message-input-box">
-      <form onSubmit={handleSubmit}>
+      <form className="input-form" onSubmit={handleSubmit}>
         <input
+          className="textbox"
           type="text"
           onChange={(e) => updateMessage(e.target.value)}
           placeholder="Type your message..."
           value={message}
         ></input>
-        <input type="submit" value="send" />
+        <input className="send-button" type="submit" value="Send" />
       </form>
     </div>
   );

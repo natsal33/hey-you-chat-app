@@ -1,12 +1,10 @@
-import React, { Component, useState, useEffect } from "react";
-import AuthHelperMethods from "../Components/AuthHelperMethods";
+import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import "./Signup.css";
 
 function Signup() {
-  const Auth = new AuthHelperMethods();
   const navigate = new useNavigate();
 
   const [username, updateUsername] = useState("");
@@ -15,25 +13,22 @@ function Signup() {
   const handleFormSubmit = (e) => {
     e.preventDefault();
 
-    //Add this part right here
     axios
-      .post("/api/signup", {
+      .post("http://localhost:5001/api/signup", {
         username: username,
         password: password,
       })
-      .then((data) => {
-        console.log(data);
-        // navigate("/login");
+      .then((res) => {
+        console.log(res);
+        alert(res.data.message);
+        if (res.data.success) {
+          navigate("/login");
+        }
       });
   };
 
-  useEffect(() => {
-    console.log("USERNAME: ", username);
-    console.log("PASSWORD: ", password);
-  }, []);
-
   return (
-    <div className="box">
+    <div className="signup-box">
       <div className="box-header">
         <h3>Signup</h3>
       </div>

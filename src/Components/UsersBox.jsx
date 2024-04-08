@@ -9,14 +9,18 @@ function UsersBox(props) {
   useEffect(() => {
     if (users) {
       update_user_objects(
-        users.map((user) => <h4 key={_.uniqueId("")}>{user["username"]}</h4>)
+        users.map((user) => (
+          <h4 className="username" key={_.uniqueId("")}>
+            {user["username"]}
+          </h4>
+        ))
       );
     }
   }, [users]);
 
   return (
     <div className="users-online">
-      <h2>Users</h2>
+      <h2 className="users_title">Users</h2>
       <div>{user_objects}</div>
     </div>
   );

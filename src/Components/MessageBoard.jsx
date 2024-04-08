@@ -1,7 +1,6 @@
 import { React, useState, useEffect } from "react";
 import Message from "./Message";
 import "./MessageBoard.css";
-const _ = require("lodash");
 
 function MessageBoard(props) {
   const [messageObjects, updateMessageObjects] = useState();
@@ -10,12 +9,14 @@ function MessageBoard(props) {
   useEffect(() => {
     if (in_messages) {
       const newMessageObjects = in_messages.map((message) => (
-        <Message
-          message={message["message"]}
-          user={message["username"]}
-          timestamp={message["timestamp"]}
-          key={_.uniqueId("")}
-        />
+        <div>
+          <Message
+            message={message["message"]}
+            user={message["username"]}
+            timestamp={message["timestamp"]}
+            key={message["id"]}
+          />
+        </div>
       ));
       updateMessageObjects(newMessageObjects);
     }

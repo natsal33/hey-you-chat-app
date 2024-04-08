@@ -1,5 +1,5 @@
 import React from "react";
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { useNavigate } from "react-router";
 import { Link } from "react-router-dom";
 import AuthHelperMethods from "../Components/AuthHelperMethods";
@@ -15,13 +15,12 @@ const Login = () => {
     const formData = new FormData(form);
     const username = formData.get("username");
     const password = formData.get("password");
-    console.log("FORM DATA: ", formData.get("password"));
     Auth.login(username, password)
       .then((res) => {
-        if (res === false) {
-          return alert("Sorry those credentials don't exist!");
+        if (res.authorized === false) {
+          return alert(res.message);
         }
-        navigate("/chat");
+        navigate("/");
       })
       .catch((err) => {
         alert(err);
@@ -30,14 +29,14 @@ const Login = () => {
 
   useEffect(() => {
     if (Auth.loggedIn()) {
-      navigate("/chat");
+      navigate("/");
     }
   }, []);
 
   return (
     <div>
       <div className="main-wrapper">
-        <div className="box">
+        <div className="login-box">
           <div className="box-header">
             <h3>Login</h3>
           </div>
