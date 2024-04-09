@@ -2,6 +2,8 @@
 
 Hey You! is a real-time web chat application with a clean and appealing aesthetic. Users an sign up and chat, while knowing they can trust that their login informaiton is protected.
 
+![alt text](<Demo-Giff-Hey-You (2).gif>)
+
 ## Features
 
 - WebSocket Communication: Bi-directional communication to enable users to send and receive messages in realtime.
