@@ -2,7 +2,7 @@
 
 Hey You! is a real-time web chat application with a clean and appealing aesthetic. Users an sign up and chat, while knowing they can trust that their login informaiton is protected.
 
-![alt text](<Demo-Video (1).gif>)
+![alt text](<./pics//Demo-Video (1).gif>)
 
 ## Features
 
@@ -19,15 +19,15 @@ Hey You! is functional and the UI/UX is complete. The next step will be to deplo
 
 ### Chat Page
 
-<img src="src/pics/Chat_Demo_Pic.png" style="width: 80%">
+<img src="./pics/Chat_Demo_Pic.png" style="width: 80%">
 
 ### Login Page
 
-<img src="src/pics/Login_Demo_Pic.png" style="width: 80%">
+<img src="./pics/Login_Demo_Pic.png" style="width: 80%">
 
 ### Signup Page
 
-<img src="src/pics/Signup_Demo_Pic.png" style="width: 80%">
+<img src="./pics/Signup_Demo_Pic.png" style="width: 80%">
 
 ## Setup Instructions
 
