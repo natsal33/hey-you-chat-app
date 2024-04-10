@@ -1,8 +1,9 @@
-# Hey You! - a place to chat (IN PROGRESS)
+# Hey You! - a place to chat
 
 Hey You! is a real-time web chat application with a clean and appealing aesthetic. Users an sign up and chat, while knowing they can trust that their login informaiton is protected.
 
-![Hey You Chat App Demo Video - two user side by side demo](./pics/Hey-You-Demo-Video.mov)
+https://github.com/natsal33/hey-you-chat-app/assets/60335620/118f2f8c-085e-4b7d-9eb6-6524be7e5a2f
+
 
 ## Features
 
