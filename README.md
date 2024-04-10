@@ -1,20 +1,21 @@
 # Hey You! - a place to chat
 
-Hey You! is a real-time web chat application with a clean and appealing aesthetic. Users an sign up and chat, while knowing they can trust that their login informaiton is protected.
+Hey You! is a real-time web chat application with a clean and appealing aesthetic. Users can sign up and chat while knowing they can trust that their login information is protected.
 
-https://github.com/natsal33/hey-you-chat-app/assets/60335620/118f2f8c-085e-4b7d-9eb6-6524be7e5a2f
+https://github.com/natsal33/hey-you-chat-app/assets/60335620/28c43586-963e-4a3b-8f5f-7eff2d423b27
+
 
 
 ## Features
 
-- WebSocket Communication: Bi-directional communication to enable users to send and receive messages in realtime.
-- User authentication using JSON Web Tokens: Users can register, login, and authenticate themselves to access the chat features.
+- WebSocket Communication: Bi-directional communication to enable users to send and receive messages in real time.
+- User authentication using JSON Web Tokens: Users can register, log in, and authenticate themselves to access the chat features.
 - Secure storage via PostgresSQL: User and message data is securely stored in a PostgreSQL database.
 - Lightweight API: The API built with Flask provides efficient communication between the front-end and the database.
 
 #### UPDATE 4/8/24:
 
-Hey You! is functional and the UI/UX is complete. The next step will be to deploy it to AWS EC2 and initialize the postgres DB using AWS RDS.
+Hey You! is functional and the UI/UX is complete. The next step will be to deploy it to AWS EC2 and initialize the Postgres DB using AWS RDS.
 
 ## Demo
 
