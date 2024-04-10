@@ -68,12 +68,10 @@ def connected():
 
 @socketio.on("connect")
 def connectedWebSocket():
-    print(f"{request.sid} client has connected")
     emit("after connect", f"{request.sid} is connected")
 
 @socketio.on('message')
 def handle_message(data):
-    print("data from the front end: ", str(data))
     try:
         username = data['username']
         message = data["message"]
@@ -90,6 +88,14 @@ def handle_message(data):
     except:
         return "No message sent. Please try again."
 
+@socketio.on('userLogin')
+def user_login(data):
+    emit("update-users", "", broadcast=True)
+
+@socketio.on("userLogout")
+def user_logout(data):
+    emit("update-users", "", broadcast=True)
+
 @socketio.on_error()
 def handle_error(e):
     print(request.event["message"])
@@ -104,31 +110,45 @@ def login():
         request_json = request.get_json()
         username = request_json['username']
         encoded_password = request_json['password'].encode('utf-8')
-
         conn = psycopg2.connect(conn_string)
         cursor = conn.cursor()
         params = {'username': username}
         cursor.execute("SELECT * FROM usernames_passwords WHERE username=%(username)s", params)
         user_fetched = cursor.fetchone()
         if user_fetched:
-            print("USER FETCHED: ", user_fetched)
             username_fetched, hash_fetched, salt_fetched = user_fetched[1], user_fetched[2].tobytes(), user_fetched[3].tobytes();
-            print("HASH FETCHED: ", hash_fetched)
             conn.close()
 
             password_match = bcrypt.checkpw(encoded_password, hash_fetched)
-            print("PASSWORD MATCH: ", password_match)
             if (password_match):
+                conn = psycopg2.connect(conn_string)
+                cursor = conn.cursor()
+                params['active'] = 1;
+                cursor.execute("UPDATE usernames_passwords SET active = b'1' WHERE username = %(username)s;", params)
+                conn.commit()
+                conn.close()
                 token = jwt.encode({"username": username_fetched, "exp": time.time() + 6000}, "thisismyuniquepassword", )
                 return jsonify({"authorized": True, "token": token})
             else:
                 return jsonify({"authorized": False, "message": "password does not match"});
             
         else:
-            print("user not found")
             return jsonify({"authorized": False, "message": "user not found"})
     except psycopg2.Error as error: 
         return jsonify(error)
+    
+@app.route('/api/logout', methods=["POST"])
+def logout():
+    request_json = request.get_json()
+    username = request_json['username']
+    params = {'username': username}
+    conn = psycopg2.connect(conn_string)
+    cursor = conn.cursor()
+    cursor.execute("UPDATE usernames_passwords SET active = b'0' WHERE username = %(username)s;", params)
+    conn.commit()
+    conn.close()
+    print(f'User {username} successfully logged out.')
+    return jsonify({})
 
 @app.route('/api/signup', methods=["POST"])
 def signup():
@@ -138,10 +158,10 @@ def signup():
         password = request_json['password'].encode('utf-8')
         salt = bcrypt.gensalt()
         hash = bcrypt.hashpw(password, salt)
-        print("HASH: ", hash)
         location = "unknown"
         fav_color = "green"
         conn = psycopg2.connect(conn_string)
+        
         try:
             cursor = conn.cursor()
             params = {
@@ -167,38 +187,34 @@ def signup():
 def getUsers():
     conn = psycopg2.connect(conn_string)
     cursor = conn.cursor()
-    cursor.execute("SELECT user_id, username FROM usernames_passwords")
+    cursor.execute("SELECT user_id, username, active FROM usernames_passwords")
     users = cursor.fetchall()
     users_fetched_dict = list(map(lambda user:  {
             "id": user[0],
             "username": user[1],
+            "active": user[2]
         }, users))
     conn.close()
     return jsonify(users_fetched_dict)
  
-@app.route('/api/get-messages', methods=["POST"])
+@app.route('/api/get-messages')
 def getMessages():
     try:
-        request_json = request.get_json()
-        username = request_json["username"]
         conn = psycopg2.connect(conn_string)
         cursor = conn.cursor()
-        if username:
-            params = {'username': username}
-            cursor.execute("SELECT * FROM messages WHERE username=%(username)s ORDER BY timestamp", params)
-            messages_fetched = cursor.fetchall()
-            conn.close()
-        else:
-            cursor.execute("SELECT * FROM messages ")
-            messages_fetched = cursor.fetchall()
-            conn.close()
+        cursor.execute("SELECT * FROM messages ORDER BY timestamp")
+        messages_fetched = cursor.fetchall()
+        conn.close()
+
         messages_fetched_dict = list(map(lambda message: {
-                "id": message[0],
-                "username": message[1],
-                "message": message[2],
-                "timestamp": message[3]
-            }, messages_fetched))
+            "id": message[0],
+            "username": message[1],
+            "message": message[2],
+            "timestamp": message[3]
+        }, messages_fetched))
+
         return jsonify(messages_fetched_dict)
+    
     except:
         return "Could not retrieve messages. Please try again."
 

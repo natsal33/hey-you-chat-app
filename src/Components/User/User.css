@@ -1,0 +1,24 @@
+@import "../../global.css";
+
+.user-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: start;
+  padding: 0px 30px;
+}
+
+.dot {
+  min-height: 25px;
+  min-width: 25px;
+  border-radius: 50%;
+  display: inline-block;
+  margin-right: 10px;
+  background-color: rgb(235, 109, 109);
+}
+
+.active {
+  background-color: lightgreen;
+}
+.user-text {
+  text-align: left;
+}

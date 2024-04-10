@@ -2,7 +2,7 @@
 
 Hey You! is a real-time web chat application with a clean and appealing aesthetic. Users an sign up and chat, while knowing they can trust that their login informaiton is protected.
 
-![alt text](<./pics//Demo-Video (1).gif>)
+![Hey You Chat App Demo Video - two user side by side demo](./pics/Hey-You-Demo-Video.mov)
 
 ## Features
 

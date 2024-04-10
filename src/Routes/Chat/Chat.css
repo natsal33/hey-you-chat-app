@@ -1,0 +1,7 @@
+@import url("https://fonts.googleapis.com/css?family=Raleway");
+@import "../../global.css";
+
+.chat {
+  display: flex;
+  justify-content: center;
+}

@@ -1,0 +1,73 @@
+@import "../../global.css";
+
+.message-wrapper-box {
+  display: grid;
+}
+
+.message-box {
+  margin: 10px 0px;
+  background-color: #fff;
+  border-radius: 24px;
+  border-style: none;
+  box-shadow: rgba(0, 0, 0, 0.2) 0 3px 5px -1px,
+    rgba(0, 0, 0, 0.14) 0 6px 10px 0, rgba(0, 0, 0, 0.12) 0 1px 18px 0;
+  box-sizing: border-box;
+  color: #3c4043;
+  fill: currentcolor;
+  font-size: 14px;
+  font-weight: 500;
+  justify-content: center;
+  padding: 8px 10px 16px 10px;
+  width: fit-content;
+}
+
+.message-header {
+  display: flex;
+  align-items: end;
+  margin: 5px 0px;
+  width: fit-content;
+}
+
+.left .message-header {
+  justify-content: start;
+}
+
+.right .message-header {
+  justify-content: end;
+}
+
+.left {
+  text-align: left;
+  justify-self: start;
+}
+
+.right {
+  text-align: right;
+  justify-self: end;
+}
+
+.user {
+  color: #51a79f;
+}
+
+.right .user {
+  padding: 0px;
+  margin: 0 0 0 15px;
+}
+
+.left .user {
+  padding: 0px;
+  margin: 0 15px 0 0;
+}
+
+.message {
+  padding: 0px 0px;
+  margin: 0px;
+  width: fit-content;
+}
+
+.message-timestamp {
+  color: gray;
+  font-size: 10px;
+  width: fit-content;
+}

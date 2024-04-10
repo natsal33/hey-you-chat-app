@@ -1,9 +1,9 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import Root from "./Root.jsx";
-import Login from "./Login.jsx";
-import Signup from "./Signup.jsx";
-import Chat, { loader as chatLoader } from "./Chat.jsx";
-import ProtectedComponent from "../Components/ProtectedComponent.jsx";
+import Root from "./Root/Root.jsx";
+import Login from "./Login/Login.jsx";
+import Signup from "./Signup/Signup.jsx";
+import Chat, { loader as chatLoader } from "./Chat/Chat.jsx";
+import ProtectedComponent from "../Components/ProtectedComponent/ProtectedComponent.jsx";
 
 const Routes = () => {
   const router = createBrowserRouter([

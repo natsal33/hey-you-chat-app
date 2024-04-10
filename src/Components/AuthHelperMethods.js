@@ -51,6 +51,14 @@ export default class AuthHelperMethods {
   };
 
   logout = () => {
+    console.log("LOGOUT");
+    const logout_user = localStorage.getItem("username");
+    this.fetch("http://localhost:5001/api/logout", {
+      method: "POST",
+      body: JSON.stringify({
+        username: logout_user,
+      }),
+    });
     localStorage.removeItem("id_token");
     localStorage.removeItem("username");
   };
